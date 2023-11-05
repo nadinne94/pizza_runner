@@ -1,12 +1,13 @@
-/*Acessando o banco de dados*/
+/*Criando Banco de Dados*/
 CREATE DATABASE pizza_runner
 GO
 
+/*Acessando o banco de dados*/
 USE pizza_runner
 GO
 
+/*Criando as tabelas*/
 
-/*Criando o banco de dados*/
 CREATE TABLE runners (
 	runner_id INT,
 	registration_date DATE
@@ -139,6 +140,7 @@ GO
 
 /*Limpeza dos dados*/	
 --temp_table customer_id
+
 DROP TABLE IF EXISTS #temp_customer_orders
 SELECT 
 	order_id, 
@@ -161,6 +163,7 @@ SELECT * FROM #temp_customer_orders
 GO
 
 --temp_table runner_id
+
 DROP TABLE IF EXISTS #temp_runner_orders
 SELECT 
 	order_id, 
@@ -179,7 +182,7 @@ SELECT
 	  WHEN duration LIKE '%mins' THEN TRIM('mins' FROM duration)
 	  WHEN duration LIKE '%minute' THEN TRIM('minute' FROM duration)
 	  WHEN duration LIKE '%minutes' THEN TRIM('minutes' FROM duration)
-      ELSE distance
+      ELSE duration
     END AS duration,
 	CASE
       WHEN cancellation is null OR cancellation = 'null' THEN ''
@@ -195,19 +198,19 @@ SELECT * FROM  #temp_runner_orders
 --A.Pizza Metrics
 	-- 1. How many pizzas were ordered
 
-SELECT COUNT(order_id) AS pedidos
+SELECT COUNT(order_id) AS "pedidos"
 FROM #temp_customer_orders
 GO
 
 	-- 2. How many unique customer orders were made?
 	
-SELECT APPROX_COUNT_DISTINCT(order_id) AS pedidos_distintos
+SELECT APPROX_COUNT_DISTINCT(order_id) AS "pedidos_distintos"
 FROM #temp_customer_orders
 GO
 
 	-- 3. How many successful orders were delivered by each runner?
 
-SELECT runner_id, COUNT(order_id) AS pedidos_entregues
+SELECT runner_id, COUNT(order_id) AS "pedidos_entregues"
 FROM #temp_runner_orders
 WHERE distance <> ''
 GROUP BY runner_id
@@ -218,7 +221,7 @@ GO
 ALTER TABLE pizza_name
 ALTER COLUMN pizza_name VARCHAR(30)
 
-SELECT pizza_name, COUNT(c.pizza_id) AS pizza_entregue
+SELECT pizza_name, COUNT(c.pizza_id) AS "pizza_entregue"
 FROM #temp_customer_orders c
 INNER JOIN #temp_runner_orders r
 ON r.order_id = c.order_id
@@ -230,7 +233,7 @@ GO
 
 	--5. How many Vegetarian and Meatlovers were ordered by each customer??
 
-SELECT c.customer_id, p.pizza_name, COUNT(c.pizza_id) AS pizza_entregue
+SELECT c.customer_id, p.pizza_name, COUNT(c.pizza_id) AS "pizza_entregue"
 FROM #temp_customer_orders c
 INNER JOIN pizza_name p
 ON c.pizza_id = p.pizza_id
@@ -240,7 +243,7 @@ GO
 
 	--6. What was the maximum number of pizzas delivered in a single order?
 
-SELECT TOP 1 c.order_id, COUNT(pizza_id) AS pizza_entregues
+SELECT TOP 1 c.order_id, COUNT(pizza_id) AS "pizza_entregues"
 FROM #temp_customer_orders c
 INNER JOIN #temp_runner_orders r
 ON c.order_id = r.order_id
@@ -281,15 +284,13 @@ FROM #temp_customer_orders c
 INNER JOIN #temp_runner_orders r
 ON c.order_id = r.order_id
 WHERE distance <> ''
-GROUP BY c.customer_id
-ORDER BY 1
 GO
 
 	--9. What was the total volume of pizzas ordered for each hour of the day?
 
 SELECT 
-  DATEPART(HOUR, order_date) AS hour_of_day, 
-  COUNT(order_id) AS pizza_count
+  DATEPART(HOUR, order_date) AS hora_do_dia, 
+  COUNT(order_id) AS pizza
 FROM #temp_customer_orders
 GROUP BY DATEPART(HOUR, order_date)
 
@@ -297,8 +298,8 @@ GROUP BY DATEPART(HOUR, order_date)
 	--10. What was the volume of orders for each day of the week?
 
 SELECT 
-  FORMAT(DATEADD(DAY, 2, order_date),'dddd') AS day_of_week, -- add 2 to adjust 1st day of the week as Monday
-  COUNT(order_id) AS total_pizzas_ordered
+  FORMAT(DATEADD(DAY, 2, order_date),'dddd') AS dia_da_semana, -- add 2 to adjust 1st day of the week as Monday
+  COUNT(order_id) AS total_pizza
 FROM #temp_customer_orders
 GROUP BY FORMAT(DATEADD(DAY, 2, order_date),'dddd')
 GO
@@ -331,14 +332,14 @@ WITH tempo_medio AS (
 	ON c.order_id = r.order_id
 	WHERE distance <> '0'
 	GROUP BY c. order_id, c.order_date,r.pickup_time
-	)
+)
 SELECT AVG(minutos) as "tempo_medio"
 FROM tempo_medio
 WHERE minutos > 0
 GO
 
 	--3.Is there any relationship between the number of pizzas and how long the order takes to prepare?
-
+	
 WITH prep_tempo_cte AS (
 	SELECT
 		c.order_id,
@@ -352,12 +353,11 @@ WITH prep_tempo_cte AS (
 	WHERE r.distance <> '0'
 	GROUP BY c.order_id, c.order_date, r.pickup_time
 )
-SELECT 
-	pizza_order,
-	AVG(prep_tempo) as "tempo_medio"
+SELECT pizza_order, AVG(prep_tempo) as "tempo_medio"
 FROM prep_tempo_cte
-WHERE prep_tempo > 1
+WHERE prep_tempo > 0
 GROUP BY pizza_order
+ORDER BY 1 DESC
 GO
 
 	--4. What was the average distance travelled for each customer?
@@ -368,7 +368,7 @@ SELECT
 		AVG(
 			CAST(distance AS REAL)
 		), 2
-	) AS "distancia_media"
+	) AS "distancia_media(km)"
 FROM #temp_customer_orders c
 JOIN #temp_runner_orders r
 	ON c.order_id = r.order_id
@@ -390,12 +390,13 @@ WHERE duration<>0
 	--6. What was the average speed for each runner for each delivery and do you notice any trend for these values?
 
 --speed=distance/duration(km/min)
+
 WITH speed_cte AS(
 	SELECT order_id, runner_id, ROUND(CAST(distance AS REAL),2) AS "distance",ROUND(CAST(duration AS REAL),2) AS "duration"
 	FROM #temp_runner_orders
 	GROUP BY order_id, runner_id, ROUND(CAST(distance AS REAL),2), ROUND(CAST(duration AS REAL),2)
 )
-SELECT order_id, runner_id, ROUND(distance/(duration/60),2) AS "speed"
+SELECT order_id, runner_id, ROUND(distance/(duration/60),2) AS "velocidade(km/h)"
 FROM speed_cte
 WHERE distance <> 0
 AND duration <> 0
@@ -413,7 +414,8 @@ WITH toppings_cte AS (
 	CROSS APPLY 
 		STRING_SPLIT(CONVERT(varchar,toppings),',')
 )
-SELECT CONVERT(varchar,n.pizza_name) AS "pizza_name", STRING_AGG(CONVERT(VARCHAR,t.topping_name), ', ') AS "ingridients"
+SELECT CONVERT(varchar,n.pizza_name) AS "pizza_nome", 
+		STRING_AGG(CONVERT(VARCHAR,t.topping_name), ', ') AS "ingredientes"
 FROM toppings_cte c
 JOIN pizza_toppings t
 	ON CONVERT(INT,c.toppings) = t.topping_id
@@ -452,7 +454,40 @@ GROUP BY t.topping_id,CONVERT(varchar,t.topping_name)
 ORDER BY 3 DESC
 GO
 
+DROP VIEW IF EXISTS extra_view
+go
+CREATE VIEW extra_view AS
+SELECT
+	order_id,
+	pizza_id,
+	VALUE "extras"
+	FROM customer_orders
+	CROSS APPLY 
+		STRING_SPLIT(CONVERT(varchar,CASE
+			WHEN extras = 'null' THEN '' 
+			ELSE extras
+	END),',')
+GO
+SELECT * FROM extra_view
+GO
+
 	--3. What was the most common exclusion?
+DROP VIEW IF EXISTS exclusions_view
+go
+CREATE VIEW exclusions_view AS
+SELECT
+	order_id,
+	pizza_id,
+	VALUE "exclusions"
+	FROM customer_orders
+	CROSS APPLY 
+		STRING_SPLIT(CONVERT(varchar,CASE
+			WHEN exclusions = 'null' THEN '' 
+			ELSE exclusions
+	END),',')
+GO
+SELECT * FROM exclusions_view
+GO
 
 WITH exclusions_cte AS (
 	SELECT
@@ -468,5 +503,38 @@ FROM exclusions_cte e
 JOIN pizza_toppings t
 	ON e.exclusions = t.topping_id
 GROUP BY t.topping_id,CONVERT(varchar,t.topping_name)
-ORDER BY 3 DESC
 GO
+
+	/*4. Generate an order item for each record in the customers_orders table in the format of one of the following:
+		Meat Lovers
+		Meat Lovers - Exclude Beef
+		Meat Lovers - Extra Bacon
+		Meat Lovers - Exclude Cheese, Bacon - Extra Mushroom, Peppers
+	*/
+
+SELECT CONVERT(varchar,t.topping_name)
+FROM exclusions_view e
+JOIN pizza_toppings t
+	ON e.exclusions = t.topping_id
+GO
+
+WITH topping_name_cte AS(
+	SELECT 
+		t.pizza_id, t.toppings, CONVERT(VARCHAR,topping_name) AS "topping_name"
+	FROM topping_view t
+	JOIN pizza_toppings p
+		ON t.toppings = p.topping_id
+	GROUP BY t.pizza_id, t.toppings, CONVERT(VARCHAR,topping_name)	
+)
+SELECT	CONCAT(p.pizza_name, exclusions, extras)
+FROM pizza_name p
+JOIN exclusions_view exc
+	ON p.pizza_id = exc.pizza_id
+JOIN extra_view ext
+	ON p.pizza_id = ext.pizza_id
+JOIN topping_name_cte t
+	ON p.pizza_id = t.pizza_id
+
+
+
+
