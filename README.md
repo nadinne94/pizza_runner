@@ -24,13 +24,24 @@
 ### Tabela <i>runner_orders</i>
    <img src="imagens/table_runner_orders.png">
 <p align="justify">
-  Observa-se que as colunas pickup_time, distance e duration, portanto precisamos substituir os valores nulos (que estão escritos como uma string) pelo tipo de dado [null]. Além disso, devemos remover os 'km', 'minute', 'minutes' e 'mins' das colunas distance e duration. A coluna cancellation tem os mesmos problemas das colunas exclusions e extras em customer_orders. Portanto, aplicaremos a mesma lógica que aplicamos a essas colunas à coluna de cancelamento. 
+  Ao inspecionar a tabela runner_orders, podemos identificar as seguintes questões:
+  Primeiro iremos padronizar os valores das colunas distance, duration e cancelation, pois recebem tipo de valores diferentes.<br>
+  <img src="imagens/create_temp_runner_orders.png">
 </p>
-  <img src="">
 <p align="justify">
+   Posteriormente, iremos modificar o tipo de dado para as colunas distance e duration que foram declaradas como varchar na criação da tabela, mas os tipos float e int seriam mais interessantes pois são caracteres númericos.
   Aplicada as alterações necessárias temos a tabela temp_runner_orders:
 </p>
-   <img src="">
+   <img src="imagens/ALTER_TEMP_RUNNER_ORDERS.png">
+<p align="justify">
+  Agora, após o tratamento dos dados podemos responder as questões propostas para a análise do negócio.
+</p>
+
+* **[A. Pizza Metrics](parte_A.md)**
+* **[B. Runner and Customer Experience](parte_B.md)**
+* **[C. Ingredient Optimisation](parte_C.md)**
+
+## Link para o desafio
 
 * **[Desafio](https://8weeksqlchallenge.com/case-study-2/)**
 
