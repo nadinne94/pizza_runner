@@ -63,5 +63,10 @@
 
 * Segunda e sexta são os dias que a pizzaria recebe mais pedidos
 
+##
+**[Pizza Runner](https://github.com/nadinne94/pizza_runner.md)** <br>
+**[Parte B](https://github.com/nadinne94/parte_B.md)** <br>
+**[Parte C](https://github.com/nadinne94/parte_C.md)**
+
 
 
