@@ -12,7 +12,7 @@
 **[Pizza Runner](pizza_runner.md)** <br>
 **[Parte A](parte_A.md)** <br>
 **[Parte B](parte_B.md)** <br>
-**[Parte C](parte_C.md)**
+**[Parte C](parte_C.md)** <br>
 **[Código](pizza_runner.sql)**
 ##
 Link para o estudo de caso:
