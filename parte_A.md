@@ -65,8 +65,8 @@
 
 ##
 **[Pizza Runner](https://github.com/nadinne94/pizza_runner/blob/main/pizza_runner.md)** <br>
-**[Parte B](https://github.com/nadinne94/parte_B.md)** <br>
-**[Parte C](https://github.com/nadinne94/parte_C.md)**
+**[Parte B](https://github.com/nadinne94/pizza_runner/blob/main/parte_B.md)** <br>
+**[Parte C](https://github.com/nadinne94/pizza_runner/blob/main/parte_C.md)**
 
 
 
