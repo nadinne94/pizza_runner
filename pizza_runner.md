@@ -41,9 +41,6 @@
 * **[B. Runner and Customer Experience](parte_B.md)**
 * **[C. Ingredient Optimisation](parte_C.md)**
 
-## Link para o desafio
-
-* **[Desafio](https://8weeksqlchallenge.com/case-study-2/)**
 
 
 ## Contato
