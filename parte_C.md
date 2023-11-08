@@ -22,7 +22,7 @@ a coluna "topping" da tabela "pizza_recipes", que foi declarada como string.
 * O queijo foi o ingrediente mais retirado das pizzas.
 
 ##
-**[Pizza Runner](https://github.com/nadinne94/pizza_runner.md)** <br>
+**[Pizza Runner](https://github.com/nadinne94/pizza_runner/blob/main/pizza_runner.md)** <br>
 **[Parte A](https://github.com/nadinne94/parte_A.md)** <br>
 **[Parte C](https://github.com/nadinne94/parte_C.md)**
 
