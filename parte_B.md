@@ -44,8 +44,8 @@ Alterado o primeiro dia da semana para a sexta-feira, temos:
 
 
 ##
-**[Pizza Runner](https://github.com/nadinne94/pizza_runner/blob/main/pizza_runner.md)** <br>
-**[Parte A ](https://github.com/nadinne94/parte_A.md)** <br>
-**[Parte C](https://github.com/nadinne94/parte_C.md)**
+**[Pizza Runner](pizza_runner.md)** <br>
+**[Parte A ](parte_A.md)** <br>
+**[Parte C](parte_C.md)**
 
 
